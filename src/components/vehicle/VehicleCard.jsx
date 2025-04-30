@@ -18,6 +18,21 @@ const VehicleCard = ({ vehicle }) => {
         battery
     } = vehicle;
 
+    const isExpired = (dateString) => {
+        if (!dateString) return false;
+
+        const expiryDate = new Date(dateString);
+        const currentDate = new Date();
+
+
+        expiryDate.setHours(0, 0, 0, 0);
+        currentDate.setHours(0, 0, 0, 0);
+
+        return currentDate > expiryDate;
+    };
+
+    const expired = isExpired(expired_gsm);
+
     const status = getVehicleStatus(acc, speed);
 
     return (
@@ -48,6 +63,10 @@ const VehicleCard = ({ vehicle }) => {
                 </div>
 
                 <div className="flex justify-between items-center mb-4 gap-1">
+                    <div className="py-2 border-t border-gray-100 flex justify-between">
+                        <span className="text-gray-500 text-sm">Status:</span>
+                        <span className={`text-sm font-medium ${status.textColorClass}`}>{status.name}</span>
+                    </div>
                     <div className="flex items-center">
                         <div className={` ${acc === 'ON' ? 'bg-green-500' : 'bg-red-500'} rounded`}></div>
                         <span className="text-[12px] font-bold">ACC {acc}</span>
@@ -75,6 +94,12 @@ const VehicleCard = ({ vehicle }) => {
                     <div className="flex items-center gap-1 text-[10px]">
                         <span className="font-medium">Expired:</span>
                         <span>{formatDate(expired_gsm)}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-[10px]">
+                        <span className="font-medium">Status:</span>
+                        <span className={expired ? 'text-red-500' : 'text-green-500'}>
+                            {expired ? 'Tidak Aktif' : 'Aktif'}
+                        </span>
                     </div>
                 </div>
             </div>
